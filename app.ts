@@ -25,7 +25,7 @@ const limiter = rateLimit({
     legacyHeaders: false,
   });
 
-  app.use("/api/v1")
+app.use("/api/v1")
 
 
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
