@@ -4,7 +4,7 @@ export const app = express();
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { rateLimit } from "express-rate-limit";
-
+import userRouter from "./routes/user.route";
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -25,7 +25,9 @@ const limiter = rateLimit({
     legacyHeaders: false,
   });
 
-app.use("/api/v1")
+app.use("/api/v1",
+    userRouter
+)
 
 
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
