@@ -16,7 +16,6 @@ import {
 } from "../services/user.service";
 import cloudinary from "cloudinary";
 
-// register user
 interface IRegistrationBody {
   name: string;
   email: string;
@@ -139,7 +138,7 @@ export const activateUser = CatchAsyncError(
   }
 );
 
-// Login user
+
 interface ILoginRequest {
   email: string;
   password: string;
@@ -349,9 +348,9 @@ export const updateProfilePicture = CatchAsyncError(
       const user = await userModel.findById(userId).select("+password");
 
       if (avatar && user) {
-        // if user have one avatar then call this if
+      
         if (user?.avatar?.public_id) {
-          // first delete the old image
+      
           await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
 
           const myCloud = await cloudinary.v2.uploader.upload(avatar, {

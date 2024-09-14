@@ -5,7 +5,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { redis } from "../utils/redis";
 import { updateAccessToken } from "../controllers/user.controller";
 
-// authenticated user
+
 export const isAutheticated = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const access_token = req.headers["access-token"] as string;
@@ -19,7 +19,6 @@ export const isAutheticated = CatchAsyncError(
       return next(new ErrorHandler("access token không hợp lệ", 400));
     }
 
-    // check if the access token is expired
     if (decoded.exp && decoded.exp <= Date.now() / 1000) {
       try {
         await updateAccessToken(req, res, next);
@@ -42,7 +41,7 @@ export const isAutheticated = CatchAsyncError(
   }
 );
 
-// validate user role
+
 export const authorizeRoles = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!roles.includes(req.user?.role || "")) {

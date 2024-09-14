@@ -5,6 +5,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { rateLimit } from "express-rate-limit";
 import userRouter from "./routes/user.route";
+import courseRouter from "./routes/course.route";
+import cartRouter from "./routes/cart.route";
+import layoutRouter from "./routes/layout.route";
+import notificationRouter from "./routes/notification.route";
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -26,7 +30,11 @@ const limiter = rateLimit({
   });
 
 app.use("/api/v1",
-    userRouter
+    userRouter,
+    courseRouter,
+    layoutRouter,
+    cartRouter,
+    notificationRouter
 )
 
 

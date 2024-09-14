@@ -12,7 +12,7 @@ import sendMail from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
 import axios from "axios";
 
-// Tải lên khóa học
+
 export const uploadCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -35,7 +35,7 @@ export const uploadCourse = CatchAsyncError(
   }
 );
 
-// Chỉnh sửa khóa học
+
 export const editCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -85,7 +85,7 @@ export const editCourse = CatchAsyncError(
   }
 );
 
-// Nhận một khóa học --- mà không cần mua
+
 export const getSingleCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -117,7 +117,6 @@ export const getSingleCourse = CatchAsyncError(
   }
 );
 
-// Nhận tất cả các khóa học --- mà không cần mua
 export const getAllCourses = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -135,7 +134,7 @@ export const getAllCourses = CatchAsyncError(
   }
 );
 
-//Nhận nội dung khóa học - chỉ dành cho người dùng hợp lệ
+
 export const getCourseByUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -166,7 +165,7 @@ export const getCourseByUser = CatchAsyncError(
   }
 );
 
-// Thêm câu hỏi trong khóa học
+
 interface IAddQuestionData {
   question: string;
   courseId: string;
@@ -324,7 +323,7 @@ export const addReview = CatchAsyncError(
 
       const courseId = req.params.id;
 
-      // check if courseId already exists in userCourseList based on _id
+    
       const courseExists = userCourseList?.some(
         (course: any) => course._id.toString() === courseId.toString()
       );
@@ -354,14 +353,14 @@ export const addReview = CatchAsyncError(
       });
 
       if (course) {
-        course.ratings = avg / course.reviews.length; // one example we have 2 reviews one is 5 another one is 4 so math working like this = 9 / 2  = 4.5 ratings
+        course.ratings = avg / course.reviews.length; 
       }
 
       await course?.save();
 
       await redis.set(courseId, JSON.stringify(course), "EX", 604800); // 7days
 
-      // create notification
+
       await NotificationModel.create({
         user: req.user?._id,
         title: "Nhận được đánh giá mới",
@@ -379,7 +378,7 @@ export const addReview = CatchAsyncError(
   }
 );
 
-// Thêm câu trả lời trong bài đánh giá
+
 interface IAddReviewData {
   comment: string;
   courseId: string;
@@ -431,7 +430,7 @@ export const addReplyToReview = CatchAsyncError(
   }
 );
 
-// Nhận tất cả các khóa học --- chỉ dành cho quản trị viên
+
 export const getAdminAllCourses = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -442,7 +441,7 @@ export const getAdminAllCourses = CatchAsyncError(
   }
 );
 
-// Xóa khóa học --- chỉ dành cho quản trị viên
+
 export const deleteCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -468,7 +467,7 @@ export const deleteCourse = CatchAsyncError(
   }
 );
 
-// Tạo URL video
+
 export const generateVideoUrl = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {

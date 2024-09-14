@@ -72,8 +72,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Mã hóa mật khẩu trước khi lưu
-//bảo mật mật khẩu bằng cách mã hóa trước khi lưu vào database
+
 userSchema.pre<IUser>("save", async function (next) {
   if (!this.isModified("password")) {
     next();
@@ -82,21 +81,21 @@ userSchema.pre<IUser>("save", async function (next) {
   next();
 });
 
-// Tạo access token
+
 userSchema.methods.SignAccessToken = function () {
   return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN || "", {
     expiresIn: "5m",
   });
 };
 
-// Tạo refresh token
+
 userSchema.methods.SignRefreshToken = function () {
   return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN || "", {
     expiresIn: "3d",
   });
 };
 
-// compare password
+
 userSchema.methods.comparePassword = async function (
   enteredPassword: string
 ): Promise<boolean> {
