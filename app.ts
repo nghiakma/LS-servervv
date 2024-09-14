@@ -27,4 +27,19 @@ const limiter = rateLimit({
 
   app.use("/api/v1")
 
+
+app.get("/test", (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({
+      succcess: true,
+      message: "API đang làm việc",
+    });
+  });
+  
+
+app.all("*", (req: Request, res: Response, next: NextFunction) => {
+    const err = new Error(`Đường dẫn ${req.originalUrl} không tìm thấy`) as any;
+    err.statusCode = 404;
+    next(err);
+  });
+
 app.use(limiter);
