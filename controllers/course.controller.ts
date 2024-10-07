@@ -489,3 +489,28 @@ export const generateVideoUrl = CatchAsyncError(
     }
   }
 );
+export const generateVideoUrlMux = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const username = "0ae39edb-e685-497f-8282-427d8b5e3d33";
+      const password = "y06pnukrHWP0I5/QWShpF/qS5w2JfB7W/MVDEzKq2GwiOBtjdcAkon38Kg8j+FYZS+X9w+F52uz";
+      const token = btoa(`${username}:${password}`);
+      const { videoId } = req.query;
+
+      let response =
+        await axios.get(
+          `https://api.mux.com/video/v1/assets/${videoId}`,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Basic ${token}`,
+            },
+          }
+        );
+      res.json(response.data);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
