@@ -19,6 +19,12 @@ interface ILink extends Document {
   url: string;
 }
 
+interface IQuizz extends Document {
+  question?: string;
+  options?: string[];
+  correctAnswer?: string;
+}
+
 interface ICourseData extends Document {
   title: string;
   description: string;
@@ -29,6 +35,7 @@ interface ICourseData extends Document {
   videoPlayer: string;
   links: ILink[];
   suggestion: string;
+  iquizz: IQuizz[];
   questions: IComment[];
 }
 
@@ -65,6 +72,12 @@ const linkSchema = new Schema<ILink>({
   url: String,
 });
 
+const iquizzSchema = new Schema<IQuizz>({
+  question: { type: String, required: false }, // Không bắt buộc
+  options: { type: [String], required: false }, // Không bắt buộc
+  correctAnswer: { type: String, required: false }, // Không bắt buộc
+});
+
 const commentSchema = new Schema<IComment>({
   user: Object,
   question: String,
@@ -81,6 +94,7 @@ const courseDataSchema = new Schema<ICourseData>({
   videoPlayer: String,
   links: [linkSchema],
   suggestion: String,
+  iquizz: { type: [iquizzSchema], required: false }, // Không bắt buộc
   questions: [commentSchema],
 });
 
