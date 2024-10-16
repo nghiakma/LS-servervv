@@ -10,6 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.670.0",
+    "@aws-sdk/s3-request-presigner": "^3.670.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
@@ -35,12 +37,14 @@
     "socket.io": "^4.7.2",
     "stripe": "^13.3.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
     "@types/ejs": "^3.1.2",
     "@types/node-cron": "^3.0.8",
-    "@types/nodemailer": "^6.4.9"
+    "@types/nodemailer": "^6.4.9",
+    "@types/uuid": "^10.0.0"
   }
 }

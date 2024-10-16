@@ -15,7 +15,7 @@ import {
   updateUserRoleService,
 } from "../services/user.service";
 import cloudinary from "cloudinary";
-
+import { uploadBase64ToS3,deleteFile  } from '../utils/s3'
 interface IRegistrationBody {
   name: string;
   email: string;
@@ -351,24 +351,18 @@ export const updateProfilePicture = CatchAsyncError(
       
         if (user?.avatar?.public_id) {
       
-          await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
+          await deleteFile(user?.avatar?.public_id);
 
-          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-            folder: "avatars",
-            width: 150,
-          });
+          const aws = await uploadBase64ToS3(avatar)
           user.avatar = {
-            public_id: myCloud.public_id,
-            url: myCloud.secure_url,
+            public_id: aws.key,
+            url: aws.url,
           };
         } else {
-          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-            folder: "avatars",
-            width: 150,
-          });
+          const aws = await uploadBase64ToS3(avatar)
           user.avatar = {
-            public_id: myCloud.public_id,
-            url: myCloud.secure_url,
+            public_id: aws.key,
+            url: aws.url,
           };
         }
       }

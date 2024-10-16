@@ -11,7 +11,7 @@ import ejs from "ejs";
 import sendMail from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
 import axios from "axios";
-
+import { uploadBase64ToS3,deleteFile  } from '../utils/s3'
 
 export const uploadCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -19,13 +19,11 @@ export const uploadCourse = CatchAsyncError(
       const data = req.body;
       const thumbnail = data.thumbnail;
       if (thumbnail) {
-        const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
-          folder: "courses",
-        });
+        const aws = await uploadBase64ToS3(thumbnail)
 
         data.thumbnail = {
-          public_id: myCloud.public_id,
-          url: myCloud.secure_url,
+          public_id: aws.key,
+          url: aws.url,
         };
       }
       createCourse(data, res, next);
@@ -47,25 +45,19 @@ export const editCourse = CatchAsyncError(
 
       const courseData = await CourseModel.findById(courseId) as any;
 
-      if (thumbnail && !thumbnail.startsWith("https")) {
-        await cloudinary.v2.uploader.destroy(courseData.thumbnail.public_id);
-
-        const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
-          folder: "courses",
-        });
+      if (thumbnail) {
+        console.log(courseData.thumbnail.public_id)
+        await deleteFile(courseData.thumbnail.public_id)
+        
+        const aws = await uploadBase64ToS3(thumbnail)
 
         data.thumbnail = {
-          public_id: myCloud.public_id,
-          url: myCloud.secure_url,
+          public_id: aws.key,
+          url: aws.url,
         };
       }
 
-      if (thumbnail.startsWith("https")) {
-        data.thumbnail = {
-          public_id: courseData?.thumbnail.public_id,
-          url: courseData?.thumbnail.url,
-        };
-      }
+ 
 
       const course = await CourseModel.findByIdAndUpdate(
         courseId,
