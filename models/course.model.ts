@@ -20,9 +20,9 @@ interface ILink extends Document {
 }
 
 interface IQuizz extends Document {
-  question?: string;
-  options?: string[];
-  correctAnswer?: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
 }
 
 interface ICourseData extends Document {
@@ -73,9 +73,9 @@ const linkSchema = new Schema<ILink>({
 });
 
 const iquizzSchema = new Schema<IQuizz>({
-  question: { type: String, required: false }, // Không bắt buộc
-  options: { type: [String], required: false }, // Không bắt buộc
-  correctAnswer: { type: String, required: false }, // Không bắt buộc
+  question: String, // Không bắt buộc
+  options: [String], // Không bắt buộc
+  correctAnswer: String, // Không bắt buộc
 });
 
 const commentSchema = new Schema<IComment>({
@@ -94,7 +94,7 @@ const courseDataSchema = new Schema<ICourseData>({
   videoPlayer: String,
   links: [linkSchema],
   suggestion: String,
-  iquizz: { type: [iquizzSchema], required: false }, // Không bắt buộc
+  iquizz: [iquizzSchema], // Không bắt buộc
   questions: [commentSchema],
 });
 
