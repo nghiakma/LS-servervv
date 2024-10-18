@@ -62,7 +62,7 @@ courseRouter.get("/getMuxVideoOTP", generateVideoUrlMux);
 courseRouter.delete(
   "/delete-course/:id",
   isAutheticated,
-  authorizeRoles("admin"),
+  authorizeRoles("admin"), 
   deleteCourse
 );
 

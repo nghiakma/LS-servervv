@@ -12,7 +12,7 @@ import sendMail from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
 import axios from "axios";
 import { uploadBase64ToS3,deleteFile  } from '../utils/s3'
-
+import jwt from "jsonwebtoken"
 export const uploadCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -484,25 +484,47 @@ export const generateVideoUrl = CatchAsyncError(
 export const generateVideoUrlMux = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const username = "0ae39edb-e685-497f-8282-427d8b5e3d33";
-      const password = "y06pnukrHWP0I5/QWShpF/qS5w2JfB7W/MVDEzKq2GwiOBtjdcAkon38Kg8j+FYZS+X9w+F52uz";
-      const token = btoa(`${username}:${password}`);
       const { videoId } = req.query;
 
-      let response =
-        await axios.get(
-          `https://api.mux.com/video/v1/assets/${videoId}`,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Basic ${token}`,
-            },
-          }
-        );
-      res.json(response.data);
+      const secretKey = Buffer.from(process.env.MUX_SIGNING_KEY_SECRET as any,'base64').toString("ascii")
+        const token = jwt.sign({
+          sub: videoId as any,
+          aud: "v",
+          exp: Math.floor(Date.now() / 1000) + (60 * 60),
+          kid: process.env.MUX_SIGNING_KEY_ID as any,
+        },
+        secretKey,
+        {algorithm: "RS256"}
+        )
+        console.log(token)
+        return res.json({token: token})
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
   }
 );
+// export const generateVideoUrlMux = CatchAsyncError(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const username = "0ae39edb-e685-497f-8282-427d8b5e3d33";
+//       const password = "y06pnukrHWP0I5/QWShpF/qS5w2JfB7W/MVDEzKq2GwiOBtjdcAkon38Kg8j+FYZS+X9w+F52uz";
+//       const token = btoa(`${username}:${password}`);
+//       const { videoId } = req.query;
+
+//       let response =
+//         await axios.get(
+//           `https://api.mux.com/video/v1/assets/${videoId}`,
+//           {
+//             headers: {
+//               Accept: "application/json",
+//               "Content-Type": "application/json",
+//               Authorization: `Basic ${token}`,
+//             },
+//           }
+//         );
+//       res.json(response.data);
+//     } catch (error: any) {
+//       return next(new ErrorHandler(error.message, 400));
+//     }
+//   }
+// );
