@@ -11,8 +11,8 @@ import ejs from "ejs";
 import sendMail from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
 import axios from "axios";
-import { uploadBase64ToS3,deleteFile  } from '../utils/s3'
-
+import { uploadBase64ToS3, deleteFile } from '../utils/s3'
+import jwt from 'jsonwebtoken'
 export const uploadCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -48,7 +48,7 @@ export const editCourse = CatchAsyncError(
       if (thumbnail) {
         console.log(courseData.thumbnail.public_id)
         await deleteFile(courseData.thumbnail.public_id)
-        
+
         const aws = await uploadBase64ToS3(thumbnail)
 
         data.thumbnail = {
@@ -57,7 +57,7 @@ export const editCourse = CatchAsyncError(
         };
       }
 
- 
+
 
       const course = await CourseModel.findByIdAndUpdate(
         courseId,
@@ -168,7 +168,7 @@ export const addQuestion = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { question, courseId, contentId }: IAddQuestionData = req.body;
-      
+
       const course = await CourseModel.findById(courseId);
 
       if (!mongoose.Types.ObjectId.isValid(contentId)) {
@@ -315,7 +315,7 @@ export const addReview = CatchAsyncError(
 
       const courseId = req.params.id;
 
-    
+
       const courseExists = userCourseList?.some(
         (course: any) => course._id.toString() === courseId.toString()
       );
@@ -345,7 +345,7 @@ export const addReview = CatchAsyncError(
       });
 
       if (course) {
-        course.ratings = avg / course.reviews.length; 
+        course.ratings = avg / course.reviews.length;
       }
 
       await course?.save();
@@ -407,7 +407,7 @@ export const addReplyToReview = CatchAsyncError(
       }
 
       review.commentReplies?.push(replyData);
-      
+
       await course?.save();
 
       await redis.set(courseId, JSON.stringify(course), "EX", 604800); // 7days
@@ -481,11 +481,32 @@ export const generateVideoUrl = CatchAsyncError(
     }
   }
 );
+export const signedUrlVideoUrlMux = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { videoId } = req.query;
+
+      const secretKey = Buffer.from(process.env.MUX_SIGNING_KEY_SECRET as any, 'base64').toString("ascii")//chuyển đổi từ base64 sang buffer sau đó chuyển buffer thành chuỗi ASCII
+      const token = jwt.sign({ //header: thuật toán RS256, payload: sub - aud - exp - kid
+        sub: videoId as any, //id của video
+        aud: "v", //khối lượng mà token đc ph
+        exp: Math.floor(Date.now() / 1000) + (60 * 60), //thời gian hết hạn
+        kid: process.env.MUX_SIGNING_KEY_ID as any,
+      },
+        secretKey,
+        { algorithm: "RS256" }
+      )
+      return res.json({ token: token })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
 export const generateVideoUrlMux = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const username = "0ae39edb-e685-497f-8282-427d8b5e3d33";
-      const password = "y06pnukrHWP0I5/QWShpF/qS5w2JfB7W/MVDEzKq2GwiOBtjdcAkon38Kg8j+FYZS+X9w+F52uz";
+      const username = "7c184250-2e20-4058-9879-95e0fa7271ec";
+      const password = "l8Z+yD9ELcme+EJfv5i++29yRSdDRsfOmpxielmYsoZVQJN2aR+9Zbm8RNHWPDVMWGFFGjpmidl";
       const token = btoa(`${username}:${password}`);
       const { videoId } = req.query;
 

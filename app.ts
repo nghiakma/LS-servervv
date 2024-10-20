@@ -12,6 +12,7 @@ import analyticsRouter from "./routes/analytics.route";
 import layoutRouter from "./routes/layout.route";
 import { rateLimit } from "express-rate-limit";
 import cartRouter from "./routes/cart.route";
+import quizzRouter from "./routes/quizz.route";
 
 // body parser
 app.use(express.json({ limit: "50mb" }));
@@ -19,8 +20,8 @@ app.use(express.json({ limit: "50mb" }));
 // cookie parser
 app.use(cookieParser());
 const corsOptions = {
-  origin: 'http://localhost:3000', 
-  credentials: true, 
+  origin: 'http://localhost:3000',
+  credentials: true,
 };
 // cors => cross origin resource sharing
 app.use(cors(corsOptions));
@@ -42,7 +43,8 @@ app.use(
   notificationRouter,
   analyticsRouter,
   layoutRouter,
-  cartRouter
+  cartRouter,
+  quizzRouter
 );
 
 // testing api

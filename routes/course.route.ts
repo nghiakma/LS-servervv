@@ -12,6 +12,7 @@ import {
   getAllCourses,
   getCourseByUser,
   getSingleCourse,
+  signedUrlVideoUrlMux,
   uploadCourse,
 } from "../controllers/course.controller";
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
@@ -59,6 +60,7 @@ courseRouter.put(
 
 courseRouter.post("/getVdoCipherOTP", generateVideoUrl);
 courseRouter.get("/getMuxVideoOTP", generateVideoUrlMux);
+courseRouter.get("/signedUrlMuxVideo", signedUrlVideoUrlMux);
 courseRouter.delete(
   "/delete-course/:id",
   isAutheticated,

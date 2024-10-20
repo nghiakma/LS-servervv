@@ -22,8 +22,6 @@ export interface IUser extends Document {
   SignAccessToken: () => string;
   SignRefreshToken: () => string;
 }
-
-
 const userSchema: Schema<IUser> = new mongoose.Schema(
   {
     name: {
@@ -67,7 +65,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
       {
         courseId: String
       }
-    ]
+    ],
   },
   { timestamps: true }
 );
