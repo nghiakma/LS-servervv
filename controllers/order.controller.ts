@@ -171,6 +171,20 @@ export const createMobileOrder = CatchAsyncError(
       }
 
       user?.courses.push(course?._id);
+      const courses = await CourseModel.find().select(
+        "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+      );
+      const cloneCourse = courses.filter(item => item._id.toString() === courseId)[0];
+
+      let _coursePush = {
+        courseId: cloneCourse._id as string,
+        chapters: cloneCourse.courseData.map((data) => ({
+          chapterId: data._id as string,
+          isCompleted: false
+        }))
+      }
+      console.log(_coursePush);
+      user?.progress?.push(_coursePush as any);
 
       await redis.set(req.user?._id, JSON.stringify(user));
 

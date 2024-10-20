@@ -18,6 +18,15 @@ export interface IUser extends Document {
   isVerified: boolean;
   courses: Array<{ courseId: string }>;
   cart: Array<{ courseId: string }>;
+  progress?: Array<{
+    courseId: string,
+    chapters: Array<{
+
+      chapterId: string,
+      isCompleted: boolean
+
+    }>
+  }>;
   comparePassword: (password: string) => Promise<boolean>;
   SignAccessToken: () => string;
   SignRefreshToken: () => string;
@@ -63,8 +72,28 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     ],
     cart: [
       {
-        courseId: String
-      }
+        courseId: String,
+      },
+    ],
+    progress: [
+      {
+        courseId: {
+          type: String,
+          required: false,
+        },
+        chapters: [
+          {
+            chapterId: {
+              type: String,
+              required: false,
+            },
+            isCompleted: {
+              type: Boolean,
+              default: false,
+            },
+          },
+        ],
+      },
     ],
   },
   { timestamps: true }
