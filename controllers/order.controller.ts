@@ -6,7 +6,9 @@ import userModel from "../models/user.model";
 import CourseModel, { ICourse } from "../models/course.model";
 import path from "path";
 import ejs from "ejs";
-import sendMail from "../utils/sendMail";
+import {
+  sendMail
+} from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
 import { getAllOrdersService, newOrder } from "../services/order.service";
 import { redis } from "../utils/redis";

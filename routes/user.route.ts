@@ -13,6 +13,9 @@ import {
   updateProfilePicture,
   updateUserInfo,
   updateUserRole,
+  getProgessOfUser,
+  markChapterAsCompletedOfUser,
+  sendCertificateAfterCourse
 } from "../controllers/user.controller";
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
 const userRouter = express.Router();
@@ -23,7 +26,7 @@ userRouter.post("/activate-user", activateUser);
 
 userRouter.post("/login", loginUser);
 
-userRouter.get("/logout",isAutheticated, logoutUser);
+userRouter.get("/logout", isAutheticated, logoutUser);
 
 userRouter.get("/me", isAutheticated, getUserInfo);
 
@@ -31,7 +34,7 @@ userRouter.get("/me", isAutheticated, getUserInfo);
 
 userRouter.post("/social-auth", socialAuth);
 
-userRouter.put("/update-user-info",isAutheticated, updateUserInfo);
+userRouter.put("/update-user-info", isAutheticated, updateUserInfo);
 
 userRouter.put("/update-user-password", isAutheticated, updatePassword);
 
@@ -58,4 +61,22 @@ userRouter.delete(
   deleteUser
 );
 
+
+userRouter.get(
+  "/user/progress",
+  isAutheticated,
+  getProgessOfUser
+)
+
+userRouter.put(
+  "/user/mark-chapter",
+  isAutheticated,
+  markChapterAsCompletedOfUser
+)
+
+userRouter.post(
+  "/user/get-certificate",
+  isAutheticated,
+  sendCertificateAfterCourse
+)
 export default userRouter;

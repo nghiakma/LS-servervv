@@ -13,9 +13,15 @@ import layoutRouter from "./routes/layout.route";
 import { rateLimit } from "express-rate-limit";
 import cartRouter from "./routes/cart.route";
 import quizzRouter from "./routes/quizz.route";
-
+import path from "path";
+import ejs from "ejs";
+import {
+  sendMail
+} from "./utils/sendMail";
+import ErrorHandler from "./utils/ErrorHandler";
+import puppeteer, { Browser } from "puppeteer";
 // body parser
-app.use(express.json({ limit: "50mb" }));
+app.use(express.json({ limit: "100mb" }));
 
 // cookie parser
 app.use(cookieParser());
@@ -46,14 +52,46 @@ app.use(
   cartRouter,
   quizzRouter
 );
-
+// app.set('view engine', 'ejs');
+// app.set('views', './mails');
 // testing api
-app.get("/test", (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({
-    succcess: true,
-    message: "API đang làm việc",
-  });
+app.get("/test", async (req: Request, res: Response, next: NextFunction) => {
+  let browser: Browser | null = null;
+  try {
+    browser = await puppeteer.launch({ headless: true }); // Đặt headless là true nếu không cần thấy trình duyệt
+    const [page] = await browser.pages();
+    const html = await ejs.renderFile("./mails/send-certification.ejs", {
+      course: 'ava',
+      name: 'adsasd',
+      date: new Date().toLocaleDateString('en-us')
+    });
+    await page.setContent(html);
+
+    const pdf = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "20px",
+        right: "20px",
+        bottom: "20px",
+        left: "20px"
+      }
+    });
+
+    console.log("PDF generated successfully:", pdf.length > 0); // Kiểm tra kích thước PDF
+    res.contentType("application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=send-certification.pdf");
+    res.end(pdf);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
+  }
 });
+
 
 // đường dẫn ko tồn tại
 app.all("*", (req: Request, res: Response, next: NextFunction) => {

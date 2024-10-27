@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chứng chỉ</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .certificate-container {
+            padding: 40px;
+            width: 100%;
+            max-width: 1024px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .certificate {
+            border: 15px solid #0C5280;
+            padding: 40px;
+            background: #fff;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .certificate:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url(https://image.ibb.co/ckrVv7/water_mark_logo.png);
+            background-size: 200px;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .certificate-header .logo {
+            width: 180px;
+            height: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .certificate-title {
+            font-size: 36px;
+            color: #0C5280;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .certificate-body h1 {
+            font-weight: 400;
+            font-size: 30px;
+            color: #0C5280;
+            margin: 20px 0;
+        }
+
+        .student-name {
+            font-size: 24px;
+            color: #555;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .certificate-content {
+            width: 80%;
+            margin: 20px auto;
+            font-size: 18px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .about-certificate {
+            width: 80%;
+            margin: 0 auto;
+            font-size: 16px;
+            color: #777;
+        }
+
+        .topic-title {
+            font-size: 20px;
+            color: #0C5280;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        .topic-description {
+            font-size: 16px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Flower decorations */
+        .flower {
+            position: absolute;
+            width: 80px;
+            height: auto;
+            opacity: 0.7;
+        }
+
+        .flower-top-left {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            transform: rotate(45deg);
+        }
+
+        .flower-top-right {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            transform: rotate(-45deg);
+        }
+
+        .flower-bottom-left {
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            transform: rotate(-45deg);
+        }
+
+        .flower-bottom-right {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="certificate-container">
+        <div class="certificate">
+            <div class="certificate-header">
+
+                <div class="certificate-header">
+                    <img src="https://mge.vn/learn/wp-content/uploads/2023/06/word-image-48.jpeg" class="logo"
+                        alt="Logo">
+                </div>
+                <div class="certificate-body">
+                    <p class="certificate-title">
+                        <strong>
+                            <%=course%>
+                        </strong>
+                    </p>
+                    <h1>Certificate of Completion</h1>
+                    <p class="student-name">
+                        <%=name%>
+                    </p>
+                    <div class="certificate-content">
+                        <div class="about-certificate">
+                            <p>has successfully completed the topic online on <%=date%>.</p>
+                        </div>
+                        <p class="topic-title">We appreciate your participation in the course</p>
+                        <p class="topic-description">Looking forward to seeing you in coming courses!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>

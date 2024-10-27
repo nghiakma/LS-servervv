@@ -6,7 +6,10 @@ import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import ejs from "ejs";
 import path from "path";
-import sendMail from "../utils/sendMail";
+import {
+  sendMail,
+  sendMailCertificate
+} from "../utils/sendMail";
 import { sendToken } from "../utils/jwt";
 import { redis } from "../utils/redis";
 import {
@@ -15,7 +18,8 @@ import {
   updateUserRoleService,
 } from "../services/user.service";
 import cloudinary from "cloudinary";
-import { uploadBase64ToS3,deleteFile  } from '../utils/s3'
+import { uploadBase64ToS3, deleteFile } from '../utils/s3';
+
 interface IRegistrationBody {
   name: string;
   email: string;
@@ -348,9 +352,9 @@ export const updateProfilePicture = CatchAsyncError(
       const user = await userModel.findById(userId).select("+password");
 
       if (avatar && user) {
-      
+
         if (user?.avatar?.public_id) {
-      
+
           await deleteFile(user?.avatar?.public_id);
 
           const aws = await uploadBase64ToS3(avatar)
@@ -439,3 +443,81 @@ export const deleteUser = CatchAsyncError(
     }
   }
 );
+
+
+// ======================================= CHAPTER =======================================
+export const getProgessOfUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = req.user?._id;
+      const response = await userModel.findById(id).select('progress');
+      res.status(200).json({
+        success: true,
+        response: response
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+)
+
+export const markChapterAsCompletedOfUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = req.user?._id;
+      const chapterId = req.query.chapterId;
+      const courseId = req.query.courseId;
+      const user = await userModel.findById(id);
+      const progresses = user?.progress;
+      const courseProgress = progresses?.find(item => item.courseId.toString() === courseId);
+      let chapterCourse = courseProgress?.chapters.find(item => item.chapterId.toString() === chapterId);
+      if (chapterCourse) {
+        chapterCourse.isCompleted = true;
+      }
+      await user?.save();
+      res.status(200).json({
+        success: true,
+        response: chapterCourse
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+)
+
+export const sendCertificateAfterCourse = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user;
+      const { courseId, courseName } = req.body;
+      const mailData = {
+        course: courseName,
+        name: user?.name,
+        date: new Date().toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+      };
+
+      try {
+        if (user) {
+          await sendMailCertificate({
+            email: user?.email,
+            subject: "Certificate of Completion",
+            template: "send-certification.ejs",
+            data: mailData,
+          });
+        }
+      } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+
+      res.status(201).json({
+        succcess: true
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+)
