@@ -521,3 +521,139 @@ export const sendCertificateAfterCourse = CatchAsyncError(
     }
   }
 )
+
+// ======================================= NOTES =======================================
+export const getNotesByCourseDataIdOfUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      const { courseId, courseDataId } = req.query;
+      const user = await userModel.findById(userId).select('notes');
+      if (!user?.notes) {
+        return next(new ErrorHandler("Không tìm thấy danh sách ghi chú", 400));
+      }
+      const response = user.notes.find(note => note.courseId === courseId && note.courseDataId === courseDataId);
+      res.status(200).json({
+        success: true,
+        response: response
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+)
+
+export const createNoteByCourseDataIdOfUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      const { courseId, courseDataId, subject, content } = req.body;
+      const user = await userModel.findById(userId).select('notes');
+      if (!user?.notes) {
+        return next(new ErrorHandler("Không tìm thấy danh sách ghi chú", 400));
+      }
+
+      let note: any = user.notes.find(note => note.courseId === courseId && note.courseDataId === courseDataId);
+      if (!note) {
+        note = {
+          courseId: courseId,
+          courseDataId: courseDataId,
+          note: []
+        };
+        const singleNote = {
+          subject: subject,
+          content: content
+        }
+        note.note.push(singleNote);
+        const notesFilter = user.notes.filter(note => note.courseDataId !== courseDataId);
+        user.notes = [...notesFilter, note]
+        console.log(user.notes);
+        await user.save();
+      } else {
+        let singleNote = {
+          subject: subject,
+          content: content
+        }
+        let _singleNoteHaveId = {
+          courseId: courseId,
+          courseDataId: courseDataId,
+          note: [...note.note]
+        }
+        _singleNoteHaveId.note.push(singleNote);
+        const notesFilter = user.notes.filter(note => note.courseDataId !== courseDataId);
+        user.notes = [...notesFilter, _singleNoteHaveId];
+        await user.save();
+      }
+      res.status(200).json({
+        success: true
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+)
+
+export const deleteSingleNoteInNoteByCourseDataIdOfUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      const { courseId, courseDataId, singleNoteIdInNote } = req.query;
+      const user = await userModel.findById(userId).select('notes');
+      if (!user?.notes) {
+        return next(new ErrorHandler("Không tìm thấy danh sách ghi chú", 400));
+      }
+
+      const targetNote = user.notes.find(note => note.courseId === courseId && note.courseDataId === courseDataId);
+
+      if (targetNote) {
+        let _cloneNote = targetNote.note.filter((item: any) => item._id.toString() !== singleNoteIdInNote);
+        let _cloneNoteOfNote = [..._cloneNote];
+        let _cloneNotes = user.notes.filter(note => note.courseDataId !== courseDataId);
+        _cloneNotes.push({
+          courseId: courseId,
+          courseDataId: courseDataId,
+          note: _cloneNoteOfNote
+        } as any)
+        user.notes = _cloneNotes;
+        await user.save();
+      }
+      res.status(200).json({
+        success: true,
+        // response: response
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+)
+
+export const updateSingleNoteInNoteByCourseDataIdOfUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      const { courseId, courseDataId, subject, content, singleNoteId } = req.body;
+      const user = await userModel.findById(userId).select('notes');
+      if (!user) {
+        return next(new ErrorHandler("Không tồn tại danh sách ghi chú", 400));
+      }
+      const targetNotes = user.notes?.find(item => item.courseId === courseId && item.courseDataId === courseDataId);
+      if (targetNotes) {
+        const index = targetNotes.note.findIndex((item: any) => item._id.toString() === singleNoteId);
+        if (index > -1) {
+          targetNotes.note[index].subject = subject;
+          targetNotes.note[index].content = content;
+        }
+        let _cloneNotes = user.notes?.filter(item => item.courseDataId !== targetNotes.courseDataId);
+        _cloneNotes?.push(targetNotes);
+        user.notes = _cloneNotes;
+        await user.save();
+      }
+      res.status(200).json({
+        success: true,
+        targetNotes
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+)

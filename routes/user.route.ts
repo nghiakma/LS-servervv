@@ -15,7 +15,12 @@ import {
   updateUserRole,
   getProgessOfUser,
   markChapterAsCompletedOfUser,
-  sendCertificateAfterCourse
+  sendCertificateAfterCourse,
+
+  getNotesByCourseDataIdOfUser,
+  createNoteByCourseDataIdOfUser,
+  deleteSingleNoteInNoteByCourseDataIdOfUser,
+  updateSingleNoteInNoteByCourseDataIdOfUser
 } from "../controllers/user.controller";
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
 const userRouter = express.Router();
@@ -78,5 +83,30 @@ userRouter.post(
   "/user/get-certificate",
   isAutheticated,
   sendCertificateAfterCourse
+)
+
+// NOTES
+userRouter.get(
+  "/user/get-list-notes",
+  isAutheticated,
+  getNotesByCourseDataIdOfUser
+)
+
+userRouter.post(
+  "/user/create-note-by-courseDataId",
+  isAutheticated,
+  createNoteByCourseDataIdOfUser
+)
+
+userRouter.delete(
+  "/user/delete-single-note-id-in-note",
+  isAutheticated,
+  deleteSingleNoteInNoteByCourseDataIdOfUser
+)
+
+userRouter.put(
+  "/user/update-single-note-id-in-note",
+  isAutheticated,
+  updateSingleNoteInNoteByCourseDataIdOfUser
 )
 export default userRouter;

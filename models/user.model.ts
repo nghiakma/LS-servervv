@@ -18,6 +18,14 @@ export interface IUser extends Document {
   isVerified: boolean;
   courses: Array<{ courseId: string }>;
   cart: Array<{ courseId: string }>;
+  notes?: Array<{
+    courseId: string,
+    courseDataId: string,
+    note: Array<{
+      subject: string,
+      content: string
+    }>
+  }>
   progress?: Array<{
     courseId: string,
     chapters: Array<{
@@ -74,6 +82,30 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
       {
         courseId: String,
       },
+    ],
+    notes: [
+      {
+        courseId: {
+          type: String,
+          required: false,
+        },
+        courseDataId: {
+          type: String,
+          required: false,
+        },
+        note: [
+          {
+            subject: {
+              type: String,
+              required: false
+            },
+            content: {
+              type: String,
+              required: false
+            }
+          }
+        ]
+      }
     ],
     progress: [
       {

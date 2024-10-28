@@ -8,7 +8,7 @@ import { redis } from "../utils/redis";
 import mongoose from "mongoose";
 import path from "path";
 import ejs from "ejs";
-import sendMail from "../utils/sendMail";
+import { sendMail } from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
 import axios from "axios";
 import { uploadBase64ToS3, deleteFile } from '../utils/s3'
