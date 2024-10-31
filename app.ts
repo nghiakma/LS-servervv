@@ -20,6 +20,7 @@ import {
 } from "./utils/sendMail";
 import ErrorHandler from "./utils/ErrorHandler";
 import puppeteer, { Browser } from "puppeteer";
+import wishListRouter from "./routes/wishlist.route";
 // body parser
 app.use(express.json({ limit: "100mb" }));
 
@@ -50,7 +51,8 @@ app.use(
   analyticsRouter,
   layoutRouter,
   cartRouter,
-  quizzRouter
+  quizzRouter,
+  wishListRouter
 );
 // app.set('view engine', 'ejs');
 // app.set('views', './mails');
