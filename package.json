@@ -32,6 +32,7 @@
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.1",
+    "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.4",
     "pdfkit": "^0.15.0",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
     "@types/ejs": "^3.1.2",
+    "@types/multer": "^1.4.12",
     "@types/node-cron": "^3.0.8",
     "@types/nodemailer": "^6.4.9",
     "@types/pdfkit": "^0.13.5",
