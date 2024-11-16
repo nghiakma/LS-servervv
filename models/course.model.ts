@@ -119,9 +119,6 @@ export const courseSchema = new Schema<ICourse>({
     type: Number,
   },
   thumbnail: {
-    public_id: {
-      type: String,
-    },
     url: {
       type: String,
     },

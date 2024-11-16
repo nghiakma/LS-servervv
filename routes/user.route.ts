@@ -23,6 +23,7 @@ import {
   updateSingleNoteInNoteByCourseDataIdOfUser
 } from "../controllers/user.controller";
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
+import { upload } from "../utils/multer";
 const userRouter = express.Router();
 
 userRouter.post("/registration", registrationUser);
@@ -43,7 +44,7 @@ userRouter.put("/update-user-info", isAutheticated, updateUserInfo);
 
 userRouter.put("/update-user-password", isAutheticated, updatePassword);
 
-userRouter.put("/update-user-avatar", isAutheticated, updateProfilePicture);
+userRouter.put("/update-user-avatar", isAutheticated, upload.single('avatar'), updateProfilePicture);
 
 userRouter.get(
   "/get-users",

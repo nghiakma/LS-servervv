@@ -19,14 +19,13 @@ import {
 } from "../services/user.service";
 import cloudinary from "cloudinary";
 import { uploadBase64ToS3, deleteFile } from '../utils/s3';
-
+import fs from "fs"
 interface IRegistrationBody {
   name: string;
   email: string;
   password: string;
   avatar?: string;
 }
-
 export const registrationUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -345,28 +344,30 @@ interface IUpdateProfilePicture {
 export const updateProfilePicture = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { avatar } = req.body as IUpdateProfilePicture;
+      // const { avatar } = req.body as IUpdateProfilePicture;
 
       const userId = req.user?._id;
 
       const user = await userModel.findById(userId).select("+password");
 
-      if (avatar && user) {
+      const image = req.file;
 
-        if (user?.avatar?.public_id) {
+      if (user) {
 
-          await deleteFile(user?.avatar?.public_id);
+        if (user?.avatar?.url) {
 
-          const aws = await uploadBase64ToS3(avatar)
+          const oldImagePath = path.join(__dirname, '../uploads/images', user?.avatar?.url);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+            console.log('Đã xóa ảnh cũ:', oldImagePath);
+          }
           user.avatar = {
-            public_id: aws.key,
-            url: aws.url,
+            url: image?.filename as any,
           };
+
         } else {
-          const aws = await uploadBase64ToS3(avatar)
           user.avatar = {
-            public_id: aws.key,
-            url: aws.url,
+            url: image?.filename as any,
           };
         }
       }
@@ -374,7 +375,7 @@ export const updateProfilePicture = CatchAsyncError(
       await user?.save();
 
       await redis.set(userId, JSON.stringify(user));
-
+      console.log(user?.avatar.url);
       res.status(200).json({
         success: true,
         user,

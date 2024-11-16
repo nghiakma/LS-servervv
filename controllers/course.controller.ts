@@ -11,9 +11,8 @@ import ejs from "ejs";
 import { sendMail } from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
 import axios from "axios";
-import { uploadBase64ToS3, deleteFile } from '../utils/s3'
-import jwt from 'jsonwebtoken'
-import fs from 'fs'
+import jwt from 'jsonwebtoken';
+import fs from 'fs';
 
 export const uploadCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -35,7 +34,7 @@ export const uploadCourse = CatchAsyncError(
 
       const course = JSON.parse(data.courseData)
       course.thumbnail = {
-        public_id: image?.mimetype,
+        // public_id: image?.mimetype,
         url: image?.filename,
       };
 
@@ -98,7 +97,7 @@ export const editCourse = CatchAsyncError(
           console.log('Đã xóa ảnh cũ:', oldImagePath);
         }
         courses.thumbnail = {
-          public_id: image?.mimetype,
+          //public_id: image?.mimetype,
           url: image?.filename,
         };
       }

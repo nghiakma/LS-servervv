@@ -8,7 +8,6 @@ import { redis } from "../utils/redis";
 import mongoose from "mongoose";
 import path from "path";
 import ejs from "ejs";
-import sendMail from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
 import axios from "axios";
 import { uploadBase64ToS3, deleteFile } from '../utils/s3'
@@ -32,7 +31,6 @@ export const saveResultQuizzOfUser = CatchAsyncError(
             // Tạo mới một quizz
             const quizz = await quizzModel.create(quizzData);
 
-            console.log(quizz);
             res.status(201).json({
                 success: true,
                 quizz
