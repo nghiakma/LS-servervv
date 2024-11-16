@@ -35,6 +35,7 @@ export const isAutheticated = CatchAsyncError(
       }
 
       req.user = JSON.parse(user);
+
       next();
     }
   }
