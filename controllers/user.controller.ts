@@ -41,8 +41,6 @@ export const registrationUser = CatchAsyncError(
         password,
       };
 
-      console.log(user);
-
       const activationToken = createActivationToken(user);
 
       const activationCode = activationToken.activationCode;
