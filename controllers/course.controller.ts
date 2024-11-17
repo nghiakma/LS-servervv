@@ -213,18 +213,18 @@ export const getAllCourses = CatchAsyncError(
 export const getCourseByUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userCourseList = req.user?.courses;
+      // const userCourseList = req.user?.courses;
       const courseId = req.params.id;
 
-      const courseExists = userCourseList?.find(
-        (course: any) => course._id.toString() === courseId
-      );
+      // const courseExists = userCourseList?.find(
+      //   (course: any) => course._id.toString() === courseId
+      // );
 
-      if (!courseExists) {
-        return next(
-          new ErrorHandler("Bạn không đủ điều kiện để tham gia khóa học này", 404)
-        );
-      }
+      // if (!courseExists) {
+      //   return next(
+      //     new ErrorHandler("Bạn không đủ điều kiện để tham gia khóa học này", 404)
+      //   );
+      // }
 
       const course = await CourseModel.findById(courseId);
 

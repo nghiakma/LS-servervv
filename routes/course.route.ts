@@ -46,7 +46,7 @@ courseRouter.get(
   getAdminAllCourses
 );
 
-courseRouter.get("/get-course-content/:id", isAutheticated, getCourseByUser);
+courseRouter.get("/get-course-content/:id", getCourseByUser);
 
 courseRouter.put("/add-question", isAutheticated, addQuestion);
 
