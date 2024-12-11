@@ -566,7 +566,6 @@ export const createNoteByCourseDataIdOfUser = CatchAsyncError(
         note.note.push(singleNote);
         const notesFilter = user.notes.filter(note => note.courseDataId !== courseDataId);
         user.notes = [...notesFilter, note]
-        console.log(user.notes);
         await user.save();
       } else {
         let singleNote = {
