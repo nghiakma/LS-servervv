@@ -76,7 +76,7 @@ export const editCourse = CatchAsyncError(
       const courseId = req.params.id;
       let videoIndex = 0;
       const coursedb = await CourseModel.findById(courseId) as any;
-
+      //file
       const data = req.body;
       const image = files.imageedit?.[0];
       const demo = files.demoedit?.[0];
@@ -167,7 +167,7 @@ export const getSingleCourse = CatchAsyncError(
       const courseId = req.params.id;
 
       const isCacheExist = await redis.get(courseId);
-
+      //check xem đã tồn tại dữ liệu trong redis chưa; xoá cache để tối ưu hoá
       if (isCacheExist) {
         const course = JSON.parse(isCacheExist);
         res.status(200).json({
