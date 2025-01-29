@@ -91,7 +91,7 @@ export const editCourse = CatchAsyncError(
       // Xóa ảnh cũ nếu có ảnh mới được upload
       console.log(coursedb.thumbnail.url)
       if (image && coursedb.thumbnail?.url) {
-        const oldImagePath = path.join(__dirname, '../uploads/images', coursedb.thumbnail.url);
+        const oldImagePath = path.join(__dirname, '../uploads/images', coursedb.thumbnail.url);// tìm ảnh đã tồn tại
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
           console.log('Đã xóa ảnh cũ:', oldImagePath);
@@ -260,7 +260,7 @@ export const addQuestion = CatchAsyncError(
 
       const couseContent = course?.courseData?.find((item: any) =>
         item._id.equals(contentId)
-      );
+      );//tìm bài học theo khoá học xem có tồn tại hay chưa
 
       if (!couseContent) {
         return next(new ErrorHandler("Id nội dung không hợp lệ", 400));
