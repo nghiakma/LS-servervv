@@ -174,7 +174,7 @@ export const getSingleCourse = CatchAsyncError(
           success: true,
           course,
         });
-      } else {
+      } else {// lấy dữ liệu khoá học
         const course = await CourseModel.findById(req.params.id).select(
           "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
         );
@@ -215,7 +215,7 @@ export const getCourseByUser = CatchAsyncError(
     try {
       // const userCourseList = req.user?.courses;
       const courseId = req.params.id;
-
+  
       // const courseExists = userCourseList?.find(
       //   (course: any) => course._id.toString() === courseId
       // );
@@ -275,7 +275,7 @@ export const addQuestion = CatchAsyncError(
 
       // Thêm câu hỏi này vào nội dung khóa học của chúng tôi
       couseContent.questions.push(newQuestion);
-
+     
       await NotificationModel.create({
         user: req.user?._id,
         title: "Câu hỏi mới nhận được",
@@ -420,9 +420,9 @@ export const addReview = CatchAsyncError(
       };
 
       course?.reviews.push(reviewData);
-
+      // Tính toán rating khoá học
       let avg = 0;
-
+      
       course?.reviews.forEach((rev: any) => {
         avg += rev.rating;
       });
@@ -432,7 +432,7 @@ export const addReview = CatchAsyncError(
       }
 
       await course?.save();
-
+      //Cập nhật lại redis phiên người dùng
       await redis.set(courseId, JSON.stringify(course), "EX", 604800); // 7days
 
 
@@ -548,7 +548,7 @@ export const generateVideoUrl = CatchAsyncError(
     try {
       const { videoId } = req.body;
       const response = await axios.post(
-        `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+     //vdoicipher hỗ trợ phát vídeo `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
         { ttl: 300 },
         {
           headers: {
@@ -563,7 +563,7 @@ export const generateVideoUrl = CatchAsyncError(
       return next(new ErrorHandler(error.message, 400));
     }
   }
-);
+);//Vdoicipher với url tạm gắn token tạm thời
 export const signedUrlVideoUrlMux = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
