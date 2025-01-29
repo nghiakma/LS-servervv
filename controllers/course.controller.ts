@@ -18,7 +18,7 @@ export const uploadCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = req.body;
-
+  //lấy file
       const files = req.files as {
         image?: Express.Multer.File[];
         demo?: Express.Multer.File[];
@@ -584,10 +584,10 @@ export const signedUrlVideoUrlMux = CatchAsyncError(
       return next(new ErrorHandler(error.message, 400));
     }
   }
-);
+);//Mux-Video 
 export const generateVideoUrlMux = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
+    try {// accesss toẹb và refresh token
       const username = "7c184250-2e20-4058-9879-95e0fa7271ec";
       const password = "l8Z+yD9ELcme+EJfv5i++29yRSdDRsfOmpxielmYsoZVQJN2aR+9Zbm8RNHWPDVMWGFFGjpmidl";
       const token = btoa(`${username}:${password}`);
@@ -595,7 +595,7 @@ export const generateVideoUrlMux = CatchAsyncError(
 
       let response =
         await axios.get(
-          `https://api.mux.com/video/v1/assets/${videoId}`,
+         //kèm header  `https://api.mux.com/video/v1/assets/${videoId}`,
           {
             headers: {
               Accept: "application/json",
