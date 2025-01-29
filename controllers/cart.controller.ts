@@ -53,14 +53,14 @@ export const removeCourseFromCart = CatchAsyncError(
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             const user = await userModel.findById(req.user?._id).select("cart");
-            const { _id } = req.body as ICourse;
+            const { _id } = req.body as ICourse; // id của khoá học
             if (user?.cart) {
-                const existCourseInCart = user?.cart.some((item) => item.courseId === _id);
+                const existCourseInCart = user?.cart.some((item) => item.courseId === _id);//check xem khoá học đã tồn tại trong giỏ hàng hay chưa
                 if (!existCourseInCart) {
                     return next(new ErrorHandler("Khóa học không tồn tại trong giỏ hàng", 400));
                 }
                 let currCart = user.cart;
-                currCart = currCart.filter(item => item.courseId !== _id);
+                currCart = currCart.filter(item => item.courseId !== _id); // lọc khoá học từ giỏ hàng
                 user.cart = currCart;
                 await user.save();
             }
