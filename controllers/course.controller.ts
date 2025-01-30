@@ -587,7 +587,7 @@ export const signedUrlVideoUrlMux = CatchAsyncError(
 );//Mux-Video 
 export const generateVideoUrlMux = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    try {// accesss toẹb và refresh token
+    try {// accesss token và refresh token
       const username = "7c184250-2e20-4058-9879-95e0fa7271ec";
       const password = "l8Z+yD9ELcme+EJfv5i++29yRSdDRsfOmpxielmYsoZVQJN2aR+9Zbm8RNHWPDVMWGFFGjpmidl";
       const token = btoa(`${username}:${password}`);
