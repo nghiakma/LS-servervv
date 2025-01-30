@@ -469,7 +469,7 @@ export const addReplyToReview = CatchAsyncError(
       if (!course) {
         return next(new ErrorHandler("Không tìm thấy khóa học", 404));
       }
-
+      // tìm kiếm đánh giá
       const review = course?.reviews?.find(
         (rev: any) => rev._id.toString() === reviewId
       );
