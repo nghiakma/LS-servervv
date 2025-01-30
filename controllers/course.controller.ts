@@ -240,7 +240,7 @@ export const getCourseByUser = CatchAsyncError(
   }
 );
 
-
+//type question data
 interface IAddQuestionData {
   question: string;
   courseId: string;
