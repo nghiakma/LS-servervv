@@ -95,7 +95,7 @@ export const editCourse = CatchAsyncError(
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
           console.log('Đã xóa ảnh cũ:', oldImagePath);
-        }
+        }//update thumbnail: image + url
         courses.thumbnail = {
           //public_id: image?.mimetype,
           url: image?.filename,
